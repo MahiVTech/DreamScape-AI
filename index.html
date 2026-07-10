@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DreamScape AI — Your Life Operating System</title>
+<meta name="description" content="DreamScape AI — a Life Operating System concept dashboard: a Dream Galaxy roadmap, editable daily planner, life balance radar, and gamified progress tracking.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230b0f1e'/%3E%3Ctext x='50' y='62' font-size='58' text-anchor='middle'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void-ink:#0b0f1e;
+    --nebula:#141b2e;
+    --nebula-2:#1b2338;
+    --star-gold:#e8b84b;
+    --aurora:#4fd1c5;
+    --comet:#ff6b6b;
+    --moon-mist:#c9cedb;
+    --pure-white:#f5f6fa;
+    --hairline: rgba(201,206,219,0.14);
+    --glass: rgba(20,27,46,0.55);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--void-ink);
+    color:var(--moon-mist);
+    font-family:var(--font-body);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--star-gold); color:var(--void-ink);}
+  button{ font-family:inherit; cursor:pointer; }
+  :focus-visible{outline:2px solid var(--star-gold); outline-offset:3px; border-radius:4px;}
+
+  h1,h2,h3{font-family:var(--font-display); color:var(--pure-white); margin:0;}
+
+  #starfield{
+    position:fixed; inset:0; width:100%; height:100%; z-index:-1;
+    background: radial-gradient(ellipse at 20% -10%, #182238 0%, var(--void-ink) 55%);
+  }
+
+  /* ---------- Topbar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px clamp(20px,5vw,64px);
+    backdrop-filter: blur(10px);
+    background: rgba(11,15,30,0.55);
+    border-bottom:1px solid var(--hairline);
+  }
+  .brand{font-family:var(--font-display); font-size:20px; letter-spacing:.02em; color:var(--pure-white); font-weight:500; background:none; border:none; padding:0;}
+  .brand span{color:var(--star-gold); font-style:italic;}
+  .topbar nav{display:flex; gap:8px; font-size:14px; font-weight:500;}
+  .navlink{
+    background:none; border:none; color:var(--moon-mist); text-decoration:none;
+    padding:8px 10px; border-radius:8px; transition:color .2s, background .2s;
+  }
+  .navlink:hover{ color:var(--star-gold); background:rgba(232,184,75,.08); }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    min-height:92vh;
+    display:flex; align-items:center; justify-content:center;
+    padding:80px clamp(20px,5vw,64px) 60px;
+    overflow:hidden;
+  }
+  .constellation-hero{
+    position:absolute; inset:0; width:100%; height:100%;
+    opacity:.9;
+  }
+  .constellation-hero .link{
+    fill:none; stroke:var(--star-gold); stroke-width:1; opacity:.35;
+    stroke-dasharray:6 320; stroke-dashoffset:0;
+    animation: draw 3.2s ease-out forwards;
+  }
+  .constellation-hero .node{ fill:var(--star-gold); opacity:0; animation: pop .5s ease forwards;}
+  .constellation-hero .node.dim{ fill:var(--moon-mist); opacity:0; }
+  @keyframes draw{ from{stroke-dashoffset:326;} to{stroke-dashoffset:0;} }
+  @keyframes pop{ to{opacity:1;} }
+
+  .hero-copy{ position:relative; z-index:2; max-width:760px; text-align:center; }
+  .eyebrow{
+    font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.18em;
+    font-size:12px; color:var(--aurora); margin:0 0 18px;
+  }
+  .hero-copy h1{
+    font-size:clamp(34px,6vw,64px); font-weight:500; line-height:1.08; letter-spacing:-.01em;
+  }
+  .hero-copy h1 em{ font-style:italic; color:var(--star-gold); }
+  .lede{
+    max-width:520px; margin:22px auto 0; font-size:17px; color:var(--moon-mist);
+  }
+  .cta{
+    display:inline-flex; align-items:center; gap:8px; margin-top:34px;
+    font-family:var(--font-mono); font-size:14px;
+    color:var(--void-ink); background:var(--star-gold); border:none;
+    padding:14px 26px; border-radius:999px; font-weight:600;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .cta:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(232,184,75,.25); }
+
+  /* ---------- Layout ---------- */
+  .app{ max-width:1180px; margin:0 auto; padding:10px clamp(20px,5vw,64px) 100px; }
+  section{ margin-bottom:34px; scroll-margin-top:90px; }
+
+  .card{
+    background:var(--glass);
+    border:1px solid var(--hairline);
+    border-radius:18px;
+    padding:26px;
+    backdrop-filter: blur(6px);
+  }
+  .card h3{ font-size:19px; font-weight:500; margin-bottom:18px; }
+  .card h3 .tag{
+    font-family:var(--font-mono); font-size:11px; color:var(--aurora);
+    border:1px solid rgba(79,209,197,.35); border-radius:999px; padding:3px 9px; margin-left:10px; vertical-align:middle;
+  }
+  .card p.hint{ font-size:13px; color:var(--moon-mist); opacity:.75; margin:-10px 0 16px; }
+
+  .greeting-row{
+    display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    padding-top:30px;
+  }
+  .greeting-row h2{ font-size:30px; font-weight:500; }
+  .mission{ margin-top:8px; max-width:520px; color:var(--moon-mist); font-size:15px; }
+  .mission strong{ color:var(--pure-white); font-weight:600;}
+
+  .ring-card{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .ring-label{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--moon-mist); }
+  #ringPercent{ font-family:var(--font-mono); font-size:22px; fill:var(--pure-white); font-weight:600; }
+
+  .stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .stat{ background:var(--glass); border:1px solid var(--hairline); border-radius:16px; padding:18px 20px; }
+  .stat .label{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--aurora); }
+  .stat .value{ font-family:var(--font-display); font-size:28px; color:var(--pure-white); margin-top:6px; }
+  .stat .sub{ font-size:12.5px; color:var(--moon-mist); margin-top:2px; }
+
+  .grid-2col{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:20px; align-items:stretch; }
+  .grid-2col-even{ display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:stretch; }
+
+  /* ---------- Dream Galaxy ---------- */
+  .galaxy-svg{ width:100%; }
+  .galaxy-path{ fill:none; stroke:var(--hairline); stroke-width:2; }
+  .galaxy-path.reached{ stroke:var(--star-gold); filter:drop-shadow(0 0 4px rgba(232,184,75,.6)); }
+  .galaxy-star{ cursor:pointer; }
+  .galaxy-star circle{ transition:r .15s ease, filter .2s ease; }
+  .galaxy-star:hover circle{ r:9; }
+  .galaxy-star text{ font-family:var(--font-body); font-size:11px; fill:var(--moon-mist); }
+  .galaxy-star.reached text{ fill:var(--pure-white); }
+  .galaxy-year{ font-family:var(--font-mono); font-size:10.5px; fill:var(--aurora); letter-spacing:.08em; }
+  #milestoneDetail{
+    margin-top:16px; padding:14px 16px; border-radius:12px;
+    background:rgba(232,184,75,.08); border:1px solid rgba(232,184,75,.25);
+    font-size:13.5px; color:var(--moon-mist); display:none;
+  }
+  #milestoneDetail.show{ display:block; }
+  #milestoneDetail b{ color:var(--star-gold); font-family:var(--font-mono); font-size:12px; letter-spacing:.03em; }
+  #milestoneDetail .toggle-btn{
+    margin-top:10px; display:inline-block; font-family:var(--font-mono); font-size:11.5px;
+    background:none; border:1px solid var(--star-gold); color:var(--star-gold);
+    padding:6px 12px; border-radius:999px;
+  }
+  #milestoneDetail .toggle-btn:hover{ background:rgba(232,184,75,.12); }
+
+  /* ---------- skill radar / life balance ---------- */
+  .radar-labels text{ font-family:var(--font-mono); font-size:10.5px; fill:var(--moon-mist); }
+  .radar-grid{ fill:none; stroke:var(--hairline); stroke-width:1; }
+  .radar-shape{ fill:rgba(79,209,197,.18); stroke:var(--aurora); stroke-width:2; transition:d .3s; }
+  .radar-dot{ fill:var(--aurora); }
+  .balance-sliders{ margin-top:18px; display:flex; flex-direction:column; gap:10px; }
+  .balance-row{ display:flex; align-items:center; gap:10px; }
+  .balance-row label{ width:110px; font-size:12.5px; color:var(--moon-mist); flex-shrink:0; }
+  .balance-row input[type=range]{ flex:1; accent-color:var(--aurora); }
+  .balance-row .bv{ font-family:var(--font-mono); font-size:11.5px; color:var(--pure-white); width:32px; text-align:right; }
+
+  /* ---------- planner ---------- */
+  .add-task-row{ display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+  .add-task-row input[type=text]{
+    flex:1; min-width:160px; background:rgba(255,255,255,.04); border:1px solid var(--hairline);
+    border-radius:10px; padding:10px 12px; color:var(--pure-white); font-size:13.5px;
+  }
+  .add-task-row select{
+    background:rgba(255,255,255,.04); border:1px solid var(--hairline); border-radius:10px;
+    padding:10px 10px; color:var(--moon-mist); font-size:13px;
+  }
+  .add-task-row input::placeholder{ color:var(--moon-mist); opacity:.6; }
+  .add-btn{
+    background:var(--aurora); border:none; color:var(--void-ink); font-weight:600;
+    padding:10px 16px; border-radius:10px; font-size:13.5px; white-space:nowrap;
+  }
+  .add-btn:hover{ filter:brightness(1.1); }
+
+  .timeline{ display:flex; flex-direction:column; gap:2px; }
+  .time-block{ margin-top:14px; }
+  .time-block:first-child{ margin-top:0; }
+  .time-block .tb-label{
+    font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--star-gold); margin-bottom:8px; display:block;
+  }
+  .task{ display:flex; align-items:center; gap:12px; padding:10px 4px; border-bottom:1px solid var(--hairline); }
+  .task:last-child{ border-bottom:none; }
+  .task input[type=checkbox]{
+    appearance:none; width:18px; height:18px; min-width:18px; border-radius:6px;
+    border:1.5px solid var(--moon-mist); position:relative; transition:.15s;
+  }
+  .task input[type=checkbox]:checked{ background:var(--aurora); border-color:var(--aurora); }
+  .task input[type=checkbox]:checked::after{
+    content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:12px; color:var(--void-ink); font-weight:700;
+  }
+  .task label{ flex:1; font-size:14.5px; color:var(--pure-white); }
+  .task.done label{ color:var(--moon-mist); text-decoration:line-through; opacity:.6; }
+  .task .xp-chip{ font-family:var(--font-mono); font-size:11px; color:var(--star-gold); opacity:.8; }
+  .task .del-btn{
+    background:none; border:none; color:var(--comet); opacity:.55; font-size:16px; line-height:1; padding:4px 6px; border-radius:6px;
+  }
+  .task .del-btn:hover{ opacity:1; background:rgba(255,107,107,.12); }
+  .empty-note{ font-size:13px; color:var(--moon-mist); opacity:.6; padding:8px 4px; }
+
+  /* ---------- gamification ---------- */
+  .level-row{ display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .level-badge{
+    width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:conic-gradient(var(--star-gold) var(--lvl-pct,60%), rgba(255,255,255,0.08) 0);
+    font-family:var(--font-mono); font-weight:600; color:var(--pure-white); position:relative;
+  }
+  .level-badge::before{ content:''; position:absolute; inset:5px; border-radius:50%; background:var(--nebula-2); }
+  .level-badge span{ position:relative; z-index:1; font-size:15px; }
+  .level-title{ font-family:var(--font-display); font-size:17px; color:var(--pure-white); }
+  .level-sub{ font-family:var(--font-mono); font-size:11.5px; color:var(--moon-mist); }
+  .xp-bar-track{ height:8px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; margin-top:6px;}
+  .xp-bar-fill{ height:100%; background:linear-gradient(90deg,var(--star-gold),var(--aurora)); border-radius:999px; transition:width .5s ease; }
+  .badge-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+  .badge-chip{ font-family:var(--font-mono); font-size:11.5px; padding:6px 12px; border-radius:999px; border:1px solid var(--hairline); color:var(--moon-mist); background:rgba(255,255,255,.03); }
+  .badge-chip.earned{ color:var(--void-ink); background:var(--star-gold); border-color:var(--star-gold); }
+  .streak-line{ display:flex; align-items:center; gap:6px; margin-top:16px; font-size:13.5px; color:var(--moon-mist); }
+  .streak-line b{ color:var(--comet); font-family:var(--font-mono); }
+
+  /* ---------- future self / dream weather ---------- */
+  .reveal-btn{
+    background:none; border:1px solid var(--star-gold); color:var(--star-gold);
+    padding:10px 18px; border-radius:999px; font-family:var(--font-mono); font-size:13px; font-weight:600;
+  }
+  .reveal-btn:hover{ background:rgba(232,184,75,.1); }
+  .future-msg{
+    margin-top:16px; font-family:var(--font-display); font-style:italic; font-size:16px;
+    color:var(--pure-white); line-height:1.55; min-height:1em;
+  }
+  .future-msg .cursor{ opacity:.6; }
+  .weather-display{ display:flex; align-items:center; gap:18px; }
+  .weather-icon{ font-size:44px; line-height:1; }
+  .weather-name{ font-family:var(--font-display); font-size:20px; color:var(--pure-white); }
+  .weather-desc{ font-size:13px; color:var(--moon-mist); margin-top:4px; max-width:280px; }
+
+  /* ---------- time machine ---------- */
+  .tm-row{ display:flex; align-items:center; gap:18px; margin-bottom:20px; flex-wrap:wrap; }
+  .tm-year{ font-family:var(--font-mono); font-size:13px; color:var(--aurora); width:44px; }
+  input[type=range].tm-slider{ flex:1; min-width:200px; accent-color:var(--star-gold); }
+  .tm-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .tm-stat{ background:rgba(255,255,255,.03); border:1px solid var(--hairline); border-radius:14px; padding:16px; text-align:center; }
+  .tm-stat .label{ font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--aurora); }
+  .tm-stat .value{ font-family:var(--font-display); font-size:24px; color:var(--pure-white); margin-top:6px; }
+
+  /* ---------- analytics ---------- */
+  .bar-chart{ width:100%; height:auto; }
+  .bar{ fill:var(--aurora); opacity:.85; transition:opacity .2s; }
+  .bar:hover{ opacity:1; }
+  .bar-label, .bar-value{ font-family:var(--font-mono); font-size:11px; fill:var(--moon-mist); }
+
+  footer{ text-align:center; padding:40px 20px 60px; font-family:var(--font-mono); font-size:12px; color:var(--moon-mist); border-top:1px solid var(--hairline); }
+  footer span{ color:var(--star-gold); }
+
+  @media (max-width:880px){
+    .stat-grid{ grid-template-columns:repeat(2,1fr); }
+    .grid-2col, .grid-2col-even{ grid-template-columns:1fr; }
+    .greeting-row{ flex-direction:column; align-items:flex-start; }
+    .tm-stats{ grid-template-columns:1fr; }
+  }
+  @media (max-width:520px){
+    .stat-grid{ grid-template-columns:1fr 1fr; }
+    .topbar nav{ display:none; }
+  }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<header class="topbar">
+  <button class="brand" data-scroll="hero-top">DreamScape <span>AI</span></button>
+  <nav>
+    <button class="navlink" data-scroll="dashboard">Dashboard</button>
+    <button class="navlink" data-scroll="galaxy-section">Galaxy</button>
+    <button class="navlink" data-scroll="planner-section">Planner</button>
+    <button class="navlink" data-scroll="time-machine-section">Time Machine</button>
+  </nav>
+</header>
+
+<section class="hero" id="hero-top">
+  <svg class="constellation-hero" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path class="link" d="M120,480 L280,360 L470,400 L620,240 L800,270 L980,140 L1090,190" style="animation-delay:.1s"/>
+    <g class="node" style="animation-delay:.3s"><circle cx="120" cy="480" r="4"/></g>
+    <g class="node" style="animation-delay:.6s"><circle cx="280" cy="360" r="4"/></g>
+    <g class="node" style="animation-delay:.9s"><circle cx="470" cy="400" r="4"/></g>
+    <g class="node" style="animation-delay:1.2s"><circle cx="620" cy="240" r="5"/></g>
+    <g class="node dim" style="animation-delay:1.5s"><circle cx="800" cy="270" r="4"/></g>
+    <g class="node dim" style="animation-delay:1.8s"><circle cx="980" cy="140" r="4"/></g>
+    <g class="node dim" style="animation-delay:2.1s"><circle cx="1090" cy="190" r="4"/></g>
+  </svg>
+  <div class="hero-copy">
+    <p class="eyebrow">Life Operating System</p>
+    <h1>Chart the sky between<br>who you are<br>and who you're <em>becoming</em>.</h1>
+    <p class="lede">DreamScape AI turns one long-term dream into daily coordinates — a galaxy to travel through, a plan for today, and a memory that never forgets why you started.</p>
+    <button class="cta" data-scroll="dashboard">Enter your DreamScape ↓</button>
+  </div>
+</section>
+
+<main class="app" id="dashboard">
+
+  <section class="greeting-row">
+    <div>
+      <h2>Good morning, Mahi 👋</h2>
+      <p class="mission" id="missionText">Today's mission is below — check items off as you go. Everything here updates live.</p>
+    </div>
+    <div class="ring-card">
+      <svg width="128" height="128" viewBox="0 0 128 128">
+        <circle cx="64" cy="64" r="54" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="10"/>
+        <circle id="ringFill" cx="64" cy="64" r="54" fill="none" stroke="url(#ringGrad)" stroke-width="10"
+          stroke-linecap="round" stroke-dasharray="339.3" stroke-dashoffset="339.3"
+          transform="rotate(-90 64 64)"/>
+        <defs>
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e8b84b"/>
+            <stop offset="100%" stop-color="#4fd1c5"/>
+          </linearGradient>
+        </defs>
+        <text id="ringPercent" x="64" y="70" text-anchor="middle">0%</text>
+      </svg>
+      <span class="ring-label">Dream Completion</span>
+    </div>
+  </section>
+
+  <section class="stat-grid">
+    <div class="stat">
+      <div class="label">Streak</div>
+      <div class="value" id="statStreak">—</div>
+      <div class="sub">days in a row</div>
+    </div>
+    <div class="stat">
+      <div class="label">XP Today</div>
+      <div class="value" id="statXP">—</div>
+      <div class="sub">toward next level</div>
+    </div>
+    <div class="stat">
+      <div class="label">Tasks Done</div>
+      <div class="value" id="statTasksDone">—</div>
+      <div class="sub" id="statTasksSub">of your list</div>
+    </div>
+    <div class="stat">
+      <div class="label">Milestones</div>
+      <div class="value" id="statMilestones">—</div>
+      <div class="sub">reached on the roadmap</div>
+    </div>
+  </section>
+
+  <section class="grid-2col" id="galaxy-section">
+    <div class="card">
+      <h3>Dream Galaxy <span class="tag">tap a star to log progress</span></h3>
+      <p class="hint">🌍 Earth → your dream planet 🪐. Click any star to mark it reached (or not) — the path glows as you go.</p>
+      <svg class="galaxy-svg" viewBox="0 0 640 190" id="galaxySvg"></svg>
+      <div id="milestoneDetail"></div>
+    </div>
+    <div class="card">
+      <h3>Life Balance Radar</h3>
+      <p class="hint">Drag a slider to log how a dimension of your life feels right now.</p>
+      <svg viewBox="0 0 260 260" width="100%" id="radarSvg"></svg>
+      <div class="balance-sliders" id="balanceSliders"></div>
+    </div>
+  </section>
+
+  <section class="grid-2col" id="planner-section">
+    <div class="card planner-card">
+      <h3>Today's Plan <span class="tag">yours to edit</span></h3>
+      <div class="add-task-row">
+        <input type="text" id="newTaskInput" placeholder="Add a task, e.g. 'Read one ML paper'" maxlength="80">
+        <select id="newTaskBlock">
+          <option>Morning</option>
+          <option>Afternoon</option>
+          <option selected>Evening</option>
+          <option>Night</option>
+        </select>
+        <button class="add-btn" id="addTaskBtn">+ Add task</button>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </div>
+    <div class="card gamify-card">
+      <h3>Progress &amp; Titles</h3>
+      <div class="level-row">
+        <div class="level-badge" id="levelBadge" style="--lvl-pct:0%"><span id="levelNum">1</span></div>
+        <div>
+          <div class="level-title" id="levelTitle">Dreamer</div>
+          <div class="level-sub" id="xpToNext">— XP to next level</div>
+        </div>
+      </div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBarFill" style="width:0%"></div></div>
+      <div class="badge-row" id="badgeRow"></div>
+      <div class="streak-line">🔥 <b id="streakInline">—</b>-day streak — don't break the chain tonight.</div>
+    </div>
+  </section>
+
+  <section class="grid-2col-even">
+    <div class="card">
+      <h3>Future Self</h3>
+      <p class="hint">A message from the version of you who made it.</p>
+      <button class="reveal-btn" id="futureBtn">Hear from Future You</button>
+      <p class="future-msg" id="futureMsg"></p>
+    </div>
+    <div class="card">
+      <h3>Dream Weather</h3>
+      <p class="hint">A read on your momentum, generated from your stats.</p>
+      <div class="weather-display">
+        <div class="weather-icon" id="weatherIcon">☀️</div>
+        <div>
+          <div class="weather-name" id="weatherName">Momentum</div>
+          <div class="weather-desc" id="weatherDesc">Building nicely.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="time-machine-section">
+    <h3>Time Machine <span class="tag">projection, not a promise</span></h3>
+    <p class="hint">Drag the slider to see where your current pace puts you.</p>
+    <div class="tm-row">
+      <span class="tm-year">2026</span>
+      <input type="range" class="tm-slider" id="tmSlider" min="2026" max="2030" step="1" value="2026">
+      <span class="tm-year" id="tmYearLabel">2026</span>
+    </div>
+    <div class="tm-stats">
+      <div class="tm-stat"><div class="label">Projected completion</div><div class="value" id="tmCompletion">—%</div></div>
+      <div class="tm-stat"><div class="label">Milestones by then</div><div class="value" id="tmMilestones">—</div></div>
+      <div class="tm-stat"><div class="label">Projected title</div><div class="value" id="tmTitle" style="font-size:17px;">—</div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Weekly Growth <span class="tag">learning hours</span></h3>
+    <svg class="bar-chart" viewBox="0 0 640 200" id="barChart"></svg>
+  </section>
+
+</main>
+
+<footer>DreamScape AI — a portfolio concept for a <span>Life Operating System</span>. Built with vanilla HTML, CSS &amp; JS. No data leaves your browser.</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- Starfield background ---------------- */
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = document.documentElement.scrollHeight;
+    const count = Math.floor((canvas.width * canvas.height) / 9000);
+    stars = Array.from({length: Math.min(count, 260)}, () => ({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*1.3 + 0.3,
+      phase: Math.random()*Math.PI*2,
+      speed: Math.random()*0.015 + 0.005
+    }));
+  }
+  function drawStars(t){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{
+      const twinkle = reduceMotion ? 0.6 : 0.5 + 0.5*Math.sin((t||0)*s.speed + s.phase);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(245,246,250,${0.25 + twinkle*0.55})`;
+      ctx.fill();
+    });
+    if(!reduceMotion) requestAnimationFrame(drawStars);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(drawStars);
+
+  /* ---------------- Smooth-scroll nav (no dead links) ---------------- */
+  document.querySelectorAll('[data-scroll]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const target = document.getElementById(btn.dataset.scroll);
+      if(target) target.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'start'});
+    });
+  });
+
+  /* ---------------- Milestone data (Dream Galaxy) ---------------- */
+  const MILESTONE_DEFS = [
+    { id:"py",   year:"Year 1", name:"Python",        desc:"Core syntax, data structures, scripting fluency." },
+    { id:"math", year:"Year 1", name:"Math",          desc:"Linear algebra, probability, calculus for ML." },
+    { id:"git",  year:"Year 1", name:"Git",           desc:"Version control and collaborative workflows." },
+    { id:"proj", year:"Year 1", name:"Projects",      desc:"Three shipped beginner projects for your portfolio." },
+    { id:"ml",   year:"Year 2", name:"ML",            desc:"Supervised & unsupervised learning fundamentals." },
+    { id:"dl",   year:"Year 2", name:"Deep Learning", desc:"Neural networks, backprop, optimization." },
+    { id:"cv",   year:"Year 2", name:"Computer Vision", desc:"CNNs and image-based applications." },
+    { id:"nlp",  year:"Year 2", name:"NLP",           desc:"Text processing and language modeling basics." },
+    { id:"llm",  year:"Year 3", name:"LLMs",          desc:"Transformers, fine-tuning, prompting at depth." },
+    { id:"dep",  year:"Year 3", name:"Deployment",    desc:"Shipping models to production reliably." },
+    { id:"res",  year:"Year 3", name:"Research",      desc:"Reading and reproducing papers." },
+    { id:"int",  year:"Year 3", name:"Interview Prep",desc:"Mock interviews and system design." }
+  ];
+  const DEFAULT_REACHED = ["py","math","git"]; // first three reached by default, matches "already in progress" narrative
+
+  const DEFAULT_TASKS = [
+    { id:"t1", label:"Complete React Hooks module", xp:20, block:"Morning", done:false },
+    { id:"t2", label:"Solve two LeetCode questions", xp:25, block:"Afternoon", done:false },
+    { id:"t3", label:"Finish CampusOS dashboard component", xp:30, block:"Evening", done:false },
+    { id:"t4", label:"Review DBMS for one hour", xp:15, block:"Evening", done:false },
+    { id:"t5", label:"Lights out before midnight", xp:10, block:"Night", done:false }
+  ];
+
+  const DEFAULT_STATE = {
+    tasks: DEFAULT_TASKS,
+    reachedMilestones: DEFAULT_REACHED,
+    xp: 40,
+    level: 4,
+    streak: 12,
+    balance: { Learning:70, Health:55, Sleep:45, Money:60, Relationships:65, Mental:50 }
+  };
+  const LEVEL_XP_CAP = 200;
+  const LEVEL_TITLES = ["Dreamer","Explorer","Builder","Coding Ninja","Frontend Master","Systems Thinker","Researcher","Elite AI Engineer"];
+
+  let state;
+  try{
+    const saved = JSON.parse(localStorage.getItem('dreamscape_state_v2'));
+    state = (saved && Array.isArray(saved.tasks)) ? saved : structuredCloneSafe(DEFAULT_STATE);
+  }catch(e){ state = structuredCloneSafe(DEFAULT_STATE); }
+
+  function structuredCloneSafe(o){ return JSON.parse(JSON.stringify(o)); }
+  function save(){ localStorage.setItem('dreamscape_state_v2', JSON.stringify(state)); }
+  function uid(){ return 't' + Math.random().toString(36).slice(2,9); }
+
+  /* ---------------- Derived numbers ---------------- */
+  function tasksDoneCount(){ return state.tasks.filter(t=>t.done).length; }
+  function milestonesReachedCount(){ return state.reachedMilestones.length; }
+
+  function completionPct(){
+    const totalM = MILESTONE_DEFS.length;
+    const mPct = totalM ? (milestonesReachedCount()/totalM)*100 : 0;
+    const totalT = state.tasks.length;
+    const tPct = totalT ? (tasksDoneCount()/totalT)*100 : 0;
+    if(totalT === 0) return Math.round(mPct);
+    return Math.round(mPct*0.6 + tPct*0.4);
+  }
+
+  /* ---------------- Progress ring + stats ---------------- */
+  function updateProgressRing(){
+    const pct = completionPct();
+    const circumference = 339.3;
+    const offset = circumference - (pct/100)*circumference;
+    document.getElementById('ringFill').style.strokeDashoffset = offset;
+    document.getElementById('ringPercent').textContent = pct + '%';
+  }
+  function updateStatGrid(){
+    document.getElementById('statStreak').textContent = state.streak;
+    document.getElementById('statXP').textContent = state.xp;
+    document.getElementById('statTasksDone').textContent = tasksDoneCount();
+    document.getElementById('statTasksSub').textContent = 'of ' + state.tasks.length + (state.tasks.length===1 ? ' task' : ' tasks');
+    document.getElementById('statMilestones').textContent = milestonesReachedCount() + '/' + MILESTONE_DEFS.length;
+  }
+
+  /* ---------------- Gamification ---------------- */
+  function updateGamification(){
+    document.getElementById('streakInline').textContent = state.streak;
+    const pct = Math.round((state.xp/LEVEL_XP_CAP)*100);
+    document.getElementById('xpBarFill').style.width = pct + '%';
+    document.getElementById('levelBadge').style.setProperty('--lvl-pct', pct + '%');
+    document.getElementById('levelNum').textContent = state.level;
+    document.getElementById('levelTitle').textContent = LEVEL_TITLES[Math.min(state.level-1, LEVEL_TITLES.length-1)] || "Dreamer";
+    document.getElementById('xpToNext').textContent = (LEVEL_XP_CAP - state.xp) + ' XP to Level ' + (state.level+1);
+
+    const badges = [
+      { name:"Builder", earned: milestonesReachedCount() >= 1 },
+      { name:"Frontend Explorer", earned: state.tasks.some(t=>t.done) },
+      { name:"Researcher", earned: state.reachedMilestones.includes('res') },
+      { name:"Elite AI Engineer", earned: completionPct() >= 90 }
+    ];
+    document.getElementById('badgeRow').innerHTML = badges.map(b=>
+      `<span class="badge-chip ${b.earned?'earned':''}">${b.name}</span>`
+    ).join('');
+  }
+
+  function gainXP(amount){
+    state.xp += amount;
+    while(state.xp >= LEVEL_XP_CAP){ state.xp -= LEVEL_XP_CAP; state.level += 1; }
+    while(state.xp < 0 && state.level > 1){ state.level -= 1; state.xp += LEVEL_XP_CAP; }
+    if(state.xp < 0) state.xp = 0;
+  }
+
+  /* ---------------- Planner: add / toggle / delete ---------------- */
+  function renderTimeline(){
+    const container = document.getElementById('timeline');
+    container.innerHTML = '';
+    if(state.tasks.length === 0){
+      container.innerHTML = '<p class="empty-note">No tasks yet — add your first one above.</p>';
+      return;
+    }
+    const order = ["Morning","Afternoon","Evening","Night"];
+    const blocks = {};
+    state.tasks.forEach(t=>{ (blocks[t.block] = blocks[t.block] || []).push(t); });
+
+    order.filter(b=>blocks[b]).forEach(blockName=>{
+      const wrap = document.createElement('div');
+      wrap.className = 'time-block';
+      const label = document.createElement('span');
+      label.className = 'tb-label';
+      label.textContent = blockName;
+      wrap.appendChild(label);
+      blocks[blockName].forEach(t=>{
+        const row = document.createElement('div');
+        row.className = 'task' + (t.done ? ' done' : '');
+        row.innerHTML = `
+          <input type="checkbox" id="chk-${t.id}" ${t.done ? 'checked' : ''} aria-label="${t.label}">
+          <label for="chk-${t.id}">${t.label}</label>
+          <span class="xp-chip">+${t.xp} XP</span>
+          <button class="del-btn" data-id="${t.id}" aria-label="Delete task">×</button>
+        `;
+        wrap.appendChild(row);
+      });
+      container.appendChild(wrap);
+    });
+
+    container.querySelectorAll('input[type=checkbox]').forEach(chk=>{
+      chk.addEventListener('change', ()=>{
+        const id = chk.id.replace('chk-','');
+        const t = state.tasks.find(x=>x.id===id);
+        if(!t) return;
+        t.done = chk.checked;
+        gainXP(t.done ? t.xp : -t.xp);
+        save();
+        refreshAll();
+      });
+    });
+    container.querySelectorAll('.del-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.dataset.id;
+        const t = state.tasks.find(x=>x.id===id);
+        if(t && t.done) gainXP(-t.xp);
+        state.tasks = state.tasks.filter(x=>x.id!==id);
+        save();
+        refreshAll();
+      });
+    });
+  }
+
+  document.getElementById('addTaskBtn').addEventListener('click', addTaskFromForm);
+  document.getElementById('newTaskInput').addEventListener('keydown', e=>{
+    if(e.key === 'Enter') addTaskFromForm();
+  });
+  function addTaskFromForm(){
+    const input = document.getElementById('newTaskInput');
+    const select = document.getElementById('newTaskBlock');
+    const label = input.value.trim();
+    if(!label) { input.focus(); return; }
+    state.tasks.push({ id: uid(), label, xp: 15, block: select.value, done:false });
+    input.value = '';
+    save();
+    refreshAll();
+  }
+
+  /* ---------------- Dream Galaxy ---------------- */
+  function renderGalaxy(){
+    const svg = document.getElementById('galaxySvg');
+    const W = 640, H = 190, colW = W/3, rowGap = 32, topY = 46;
+    let markup = `<text x="14" y="${H-8}" font-size="20">🌍</text><text x="${W-30}" y="${H-8}" font-size="20">🪐</text>`;
+    const years = ["Year 1","Year 2","Year 3"];
+    let prevPoint = { x: 30, y: H-16 };
+
+    years.forEach((year, yi)=>{
+      const cx0 = yi*colW + colW/2 + 14;
+      markup += `<text class="galaxy-year" x="${cx0}" y="20" text-anchor="middle">${year.toUpperCase()}</text>`;
+      const items = MILESTONE_DEFS.filter(m=>m.year===year);
+      items.forEach((item, ii)=>{
+        const x = cx0 + (ii%2===0 ? -46 : 46);
+        const y = topY + ii*rowGap;
+        const reached = state.reachedMilestones.includes(item.id);
+        const prevReached = ii===0 ? true : state.reachedMilestones.includes(items[ii-1].id);
+        markup += `<path class="galaxy-path ${reached && prevReached ? 'reached':''}" d="M${prevPoint.x},${prevPoint.y} L${x},${y}"/>`;
+        markup += `
+          <g class="galaxy-star ${reached ? 'reached':''}" data-id="${item.id}" tabindex="0" role="button" aria-pressed="${reached}" aria-label="${item.name} milestone">
+            <circle cx="${x}" cy="${y}" r="6" fill="${reached ? 'var(--star-gold)' : 'rgba(255,255,255,.18)'}" stroke="${reached ? 'none' : 'var(--moon-mist)'}" stroke-width="1"
+              style="${reached ? 'filter:drop-shadow(0 0 5px rgba(232,184,75,.8));' : ''}"/>
+            <text x="${x}" y="${y - 12}" text-anchor="middle">${item.name}</text>
+          </g>`;
+        prevPoint = { x, y };
+      });
+    });
+    const allReached = state.reachedMilestones.length === MILESTONE_DEFS.length;
+    markup += `<path class="galaxy-path ${allReached ? 'reached':''}" d="M${prevPoint.x},${prevPoint.y} L${W-40},${H-14}"/>`;
+    svg.innerHTML = markup;
+
+    svg.querySelectorAll('.galaxy-star').forEach(node=>{
+      const id = node.dataset.id;
+      const def = MILESTONE_DEFS.find(m=>m.id===id);
+      const activate = ()=>{
+        const detail = document.getElementById('milestoneDetail');
+        const reached = state.reachedMilestones.includes(id);
+        detail.classList.add('show');
+        detail.innerHTML = `<b>${def.name.toUpperCase()} · ${def.year}</b><br>${def.desc}<br>
+          <button class="toggle-btn" id="toggleMilestoneBtn">${reached ? 'Mark as not reached yet' : 'Mark as reached'}</button>`;
+        requestAnimationFrame(resize);
+        document.getElementById('toggleMilestoneBtn').addEventListener('click', ()=>{
+          if(state.reachedMilestones.includes(id)){
+            state.reachedMilestones = state.reachedMilestones.filter(x=>x!==id);
+          } else {
+            state.reachedMilestones.push(id);
+          }
+          save();
+          refreshAll();
+          detail.classList.remove('show');
+        });
+      };
+      node.addEventListener('click', activate);
+      node.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); activate(); } });
+    });
+  }
+
+  /* ---------------- Life Balance radar (editable) ---------------- */
+  const BALANCE_KEYS = ["Learning","Health","Sleep","Money","Relationships","Mental"];
+  function renderRadar(){
+    const svg = document.getElementById('radarSvg');
+    const cx=130, cy=130, R=95;
+    const n = BALANCE_KEYS.length;
+    const angle = i => (Math.PI*2*i/n) - Math.PI/2;
+    let grid = '';
+    [0.25,0.5,0.75,1].forEach(scale=>{
+      let pts = [];
+      for(let i=0;i<n;i++){ const a = angle(i); pts.push(`${cx+Math.cos(a)*R*scale},${cy+Math.sin(a)*R*scale}`); }
+      grid += `<polygon class="radar-grid" points="${pts.join(' ')}"/>`;
+    });
+    let axisLines = '', labels = '', shapePts = [], dots = '';
+    BALANCE_KEYS.forEach((key,i)=>{
+      const a = angle(i);
+      const ax = cx+Math.cos(a)*R, ay = cy+Math.sin(a)*R;
+      axisLines += `<line class="radar-grid" x1="${cx}" y1="${cy}" x2="${ax}" y2="${ay}"/>`;
+      const lx = cx+Math.cos(a)*(R+24), ly = cy+Math.sin(a)*(R+24);
+      labels += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle">${key}</text>`;
+      const v = (state.balance[key]||0)/100;
+      const px = cx+Math.cos(a)*R*v, py = cy+Math.sin(a)*R*v;
+      shapePts.push(`${px},${py}`);
+      dots += `<circle class="radar-dot" cx="${px}" cy="${py}" r="3"/>`;
+    });
+    svg.innerHTML = `<g>${grid}${axisLines}</g><polygon class="radar-shape" points="${shapePts.join(' ')}"/>${dots}<g class="radar-labels">${labels}</g>`;
+  }
+  function renderBalanceSliders(){
+    const wrap = document.getElementById('balanceSliders');
+    wrap.innerHTML = BALANCE_KEYS.map(key=>`
+      <div class="balance-row">
+        <label for="bal-${key}">${key}</label>
+        <input type="range" min="0" max="100" step="5" id="bal-${key}" value="${state.balance[key]||0}">
+        <span class="bv" id="bal-${key}-val">${state.balance[key]||0}</span>
+      </div>
+    `).join('');
+    BALANCE_KEYS.forEach(key=>{
+      document.getElementById('bal-'+key).addEventListener('input', e=>{
+        state.balance[key] = parseInt(e.target.value,10);
+        document.getElementById('bal-'+key+'-val').textContent = state.balance[key];
+        renderRadar();
+        save();
+      });
+    });
+  }
+
+  /* ---------------- Future Self ---------------- */
+  document.getElementById('futureBtn').addEventListener('click', ()=>{
+    const pct = completionPct();
+    let tone;
+    if(pct >= 75) tone = "You're closer than you think — the hard part is almost behind you.";
+    else if(pct >= 40) tone = "The middle is the slow part. Keep going, it compounds.";
+    else tone = "Every star on that galaxy started exactly where you are right now.";
+    const msg = `Hi Mahi. I'm you, a few years from now — the AI Engineer you're building toward. Right now you're ${pct}% of the way here, on a ${state.streak}-day streak. ${tone}`;
+    typewrite(document.getElementById('futureMsg'), msg);
+  });
+  let typewriteToken = 0;
+  function typewrite(el, text){
+    const myToken = ++typewriteToken; // invalidates any in-flight typewrite from a previous click
+    el.textContent = '';
+    if(reduceMotion){ el.textContent = text; return; }
+    let i = 0;
+    const speed = 18;
+    (function step(){
+      if(myToken !== typewriteToken) return; // a newer click took over, stop this one
+      if(i <= text.length){
+        el.textContent = text.slice(0,i) + '▌';
+        i++;
+        setTimeout(step, speed);
+      } else {
+        el.textContent = text;
+      }
+    })();
+  }
+
+  /* ---------------- Dream Weather ---------------- */
+  function updateWeather(){
+    const pct = completionPct();
+    const streak = state.streak;
+    let icon, name, desc;
+    if(pct >= 60 && streak >= 5){ icon='☀️'; name='Momentum'; desc='Consistent progress and a steady streak. Keep this pace.'; }
+    else if(streak === 0){ icon='🌧'; name='Burnout Risk'; desc='No streak going right now. One small task today restarts it.'; }
+    else if(pct >= 30 && pct < 60){ icon='🌈'; name='Creative Flow'; desc="You're in the messy middle — normal, and still moving."; }
+    else { icon='🌩'; name='Overloaded'; desc='A lot open at once. Consider clearing one task before adding more.'; }
+    document.getElementById('weatherIcon').textContent = icon;
+    document.getElementById('weatherName').textContent = name;
+    document.getElementById('weatherDesc').textContent = desc;
+  }
+
+  /* ---------------- Time Machine ---------------- */
+  const tmSlider = document.getElementById('tmSlider');
+  function updateTimeMachine(){
+    const year = parseInt(tmSlider.value,10);
+    document.getElementById('tmYearLabel').textContent = year;
+    const yearsOut = year - 2026;
+    const current = completionPct();
+    const paceLeftPerYear = (100 - current) / 4.5; // reaches ~100% a bit past 2030 at current pace
+    let projected = Math.min(100, Math.round(current + paceLeftPerYear * yearsOut));
+    const totalM = MILESTONE_DEFS.length;
+    const projectedMilestones = Math.min(totalM, Math.round((projected/100) * totalM));
+    document.getElementById('tmCompletion').textContent = projected + '%';
+    document.getElementById('tmMilestones').textContent = projectedMilestones + '/' + totalM;
+    let title;
+    if(projected >= 95) title = 'AI Engineer';
+    else if(projected >= 70) title = 'Junior AI Engineer';
+    else if(projected >= 40) title = 'ML Practitioner';
+    else title = 'Builder in progress';
+    document.getElementById('tmTitle').textContent = title;
+  }
+  tmSlider.addEventListener('input', updateTimeMachine);
+
+  /* ---------------- Weekly bar chart ---------------- */
+  const WEEK = [
+    { day:"Mon", hours:1.5 }, { day:"Tue", hours:2.0 }, { day:"Wed", hours:1.0 },
+    { day:"Thu", hours:2.5 }, { day:"Fri", hours:3.0 }, { day:"Sat", hours:2.5 }, { day:"Sun", hours:1.5 }
+  ];
+  function renderBarChart(){
+    const svg = document.getElementById('barChart');
+    const W=640, H=200, padBottom=28, padTop=16;
+    const max = Math.max(...WEEK.map(d=>d.hours));
+    const bw = 56, gap = (W - bw*WEEK.length)/(WEEK.length+1);
+    let markup = '';
+    WEEK.forEach((d,i)=>{
+      const h = (d.hours/max) * (H - padBottom - padTop);
+      const x = gap + i*(bw+gap);
+      const y = H - padBottom - h;
+      markup += `<rect class="bar" x="${x}" y="${y}" width="${bw}" height="${h}" rx="6"/>`;
+      markup += `<text class="bar-value" x="${x+bw/2}" y="${y-8}" text-anchor="middle">${d.hours}h</text>`;
+      markup += `<text class="bar-label" x="${x+bw/2}" y="${H-8}" text-anchor="middle">${d.day}</text>`;
+    });
+    svg.innerHTML = markup;
+  }
+
+  /* ---------------- Refresh everything ---------------- */
+  function refreshAll(){
+    renderTimeline();
+    updateProgressRing();
+    updateStatGrid();
+    updateGamification();
+    renderGalaxy();
+    updateWeather();
+    updateTimeMachine();
+    // page height can change (tasks added/removed, detail panel opens) — keep starfield covering the whole page
+    requestAnimationFrame(resize);
+  }
+
+  /* ---------------- Init ---------------- */
+  renderRadar();
+  renderBalanceSliders();
+  renderBarChart();
+  refreshAll();
+
+  window.addEventListener('load', resize);
+})();
+</script>
+</body>
+</html>
