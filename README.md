@@ -1,42 +1,255 @@
+<div align="center">
+
 # 🌌 DreamScape AI
 
-A "Life Operating System" dashboard concept — a single self-contained `index.html` with no build step and no backend.
+### ✨ Transform Your Dreams Into Reality With AI
 
-**Live demo:** open `index.html` in any browser, or enable GitHub Pages on this repo (Settings → Pages → Deploy from branch → `main` / root) and it'll be live at `https://<your-username>.github.io/<repo-name>/`.
+An immersive **Life Operating System** that gamifies productivity, tracks long-term goals, and visualizes your personal growth through an elegant futuristic dashboard.
 
-## What's in it
+🌐 **Live Demo:** https://dream-scape-ai-one.vercel.app
 
-- **Dream Galaxy** — a 3-year roadmap (Python → ... → Interview Prep) drawn as a constellation from 🌍 to 🪐. Click any star to mark a milestone reached or not.
-- **Today's Plan** — an editable daily planner. Add tasks, check them off, delete them. Each task carries XP.
-- **Dream Completion ring** — computed live from your roadmap + task progress (60/40 weighted), not hardcoded.
-- **Life Balance Radar** — six sliders (Learning, Health, Sleep, Money, Relationships, Mental) that redraw the radar chart as you drag them.
-- **Gamification** — XP, levels, titles, and badges that update as you complete things.
-- **Future Self** — a typewritten message generated from your current completion % and streak.
-- **Dream Weather** — a mood readout (☀️ Momentum / 🌧 Burnout Risk / 🌈 Creative Flow / 🌩 Overloaded) computed from your stats.
-- **Time Machine** — a 2026–2030 slider projecting your completion forward at your current pace.
-- **Weekly Growth chart** — a simple SVG bar chart.
+![HTML](https://img.shields.io/badge/HTML-5-orange?style=for-the-badge&logo=html5)
+![CSS](https://img.shields.io/badge/CSS-3-blue?style=for-the-badge&logo=css3)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?style=for-the-badge&logo=javascript)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-All state (tasks, milestones, balance sliders, XP) is saved to the browser's `localStorage`, so progress persists across reloads. No data leaves your browser — there's no backend, no API calls, no tracking.
+</div>
 
-## Tech
+---
 
-Vanilla HTML, CSS, and JavaScript. One font import (Google Fonts: Fraunces, Inter, IBM Plex Mono) — everything else is self-contained.
+# 📖 About
 
-## Running locally
+DreamScape AI is a futuristic personal dashboard designed to transform productivity into an engaging experience.
 
-Just open `index.html` directly, or serve it so relative paths behave consistently:
+Instead of using ordinary to-do lists, DreamScape AI lets users visualize their journey, earn XP, unlock achievements, monitor life balance, and build long-term habits inside an elegant AI-inspired interface.
 
-```bash
-npx serve .
-# or
-python3 -m http.server 8000
+Everything works entirely inside the browser—no backend, no login, and no tracking.
+
+---
+
+# ✨ Features
+
+## 🌌 Dream Galaxy
+Interactive roadmap showing your journey from beginner to expert.
+
+- Click milestones
+- Track progress
+- Visual constellation interface
+
+---
+
+## ✅ Smart Daily Planner
+
+- Add tasks
+- Delete tasks
+- Mark completed
+- XP rewards
+
+---
+
+## 🎯 Dynamic Progress Ring
+
+Calculates completion using
+
+- Roadmap Progress
+- Daily Tasks
+
+No fake percentages.
+
+---
+
+## 📊 Life Balance Radar
+
+Track six important aspects of life.
+
+- 📚 Learning
+- ❤️ Health
+- 😴 Sleep
+- 💰 Money
+- 👨‍👩‍👧 Relationships
+- 🧠 Mental Wellness
+
+---
+
+## 🏆 Gamification
+
+Earn
+
+- XP
+- Levels
+- Titles
+- Badges
+
+as you complete goals.
+
+---
+
+## 🤖 Future Self AI
+
+Generates motivational messages based on
+
+- Progress
+- Streak
+- Completion
+
+with a typewriter animation.
+
+---
+
+## 🌤 Dream Weather
+
+Visual mood engine.
+
+Possible states:
+
+- ☀ Momentum
+- 🌈 Creative Flow
+- 🌧 Burnout Risk
+- ⚡ Overloaded
+
+---
+
+## 🚀 Time Machine
+
+Predicts future progress between
+
+2026 → 2030
+
+based on your current consistency.
+
+---
+
+## 📈 Weekly Growth Analytics
+
+Visual SVG chart showing weekly productivity.
+
+---
+
+# 🛠 Tech Stack
+
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- SVG
+- LocalStorage
+
+No frameworks.
+No backend.
+No database.
+
+---
+
+# 📂 Project Structure
+
+```
+DreamScape-AI
+│
+├── index.html
+├── README.md
+└── .gitignore
 ```
 
-## Roadmap / not yet built
+---
 
-This is the "flagship slice" of a much bigger product concept (see the original vision doc). Not included yet, and would need a real backend/AI API to do honestly rather than fake it:
+# 🚀 Getting Started
 
-- Future Self as a generated video/voice avatar
-- A "Regret Simulator" with real predictive modeling
-- Multi-user accounts, sync across devices
-- The AI Learning / Project Generator / Interview Coach / Resume Builder modules
+Clone the repository
+
+```bash
+git clone https://github.com/MahiVTech/DreamScape-AI.git
+```
+
+Open
+
+```
+index.html
+```
+
+or run
+
+```bash
+python -m http.server
+```
+
+or
+
+```bash
+npx serve
+```
+
+---
+
+# 💾 Data Storage
+
+DreamScape AI stores everything locally using **LocalStorage**.
+
+✔ No login
+
+✔ No tracking
+
+✔ No cloud storage
+
+✔ Fully private
+
+---
+
+# 🌍 Live Demo
+
+### 🔗 https://dream-scape-ai-one.vercel.app
+
+---
+
+# 📸 Preview
+
+> Add screenshots here
+<img width="1909" height="904" alt="Screenshot 2026-07-10 115553" src="https://github.com/user-attachments/assets/246e43b1-61ed-4cd3-bea2-5cedb1189e2f" />
+
+<img width="1919" height="809" alt="image" src="https://github.com/user-attachments/assets/e4ac9504-a7b6-44a5-9007-73d9dee0c960" />
+
+<img width="1910" height="905" alt="Screenshot 2026-07-10 115603" src="https://github.com/user-attachments/assets/fbcb2829-c4a5-417b-a9d2-83a1297ddb6b" />
+
+<img width="1919" height="904" alt="image" src="https://github.com/user-attachments/assets/f3816ac1-c34b-4793-8079-89a3fedc815c" />
+
+
+
+# 🚧 Future Roadmap
+
+- AI Dream Analysis
+- AI Goal Generator
+- AI Resume Builder
+- AI Interview Coach
+- AI Voice Assistant
+- Multi-device Sync
+- User Accounts
+- AI Avatar
+- Dark/Light Themes
+
+---
+
+# 🤝 Contributing
+
+Contributions are always welcome.
+
+Fork the repository
+
+Create a feature branch
+
+Submit a Pull Request
+
+---
+
+# ⭐ Support
+
+If you like this project,
+
+⭐ Star the repository.
+
+It motivates future development.
+
+---
+
+<div align="center">
+
+Made with ❤️ by **Mahi Varshney**
+
+</div>
